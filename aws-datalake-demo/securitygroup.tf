@@ -1,8 +1,4 @@
 
-/*====
-SECURITY_GROUP.TF: New contents added 5-6-2020
-TODO - the IP address should allow only one specific IP address
-====*/
 resource "aws_security_group" "DMZSecurityGroup" {
   vpc_id      = aws_vpc.main.id
   name        = "DMZSecurityGroup"
