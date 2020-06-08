@@ -1,5 +1,7 @@
-resource "aws_key_pair" "mykeypair" {
-  key_name   = "mykeypair"
-  public_key = file(var.PATH_TO_PUBLIC_KEY)
+resource "aws_key_pair" "key" {
+  key_name   = "key"
+  public_key = file("test-key.pub")
 }
+
+
 
