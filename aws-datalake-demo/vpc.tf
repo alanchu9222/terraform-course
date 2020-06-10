@@ -32,6 +32,27 @@ resource "aws_subnet" "Subnet2" {
   }
 }
 
+resource "aws_subnet" "Subnet3" {
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "172.16.2.0/24"
+  availability_zone       = "eu-west-1a"
+
+  tags = {
+    Name = "Subnet 3 - Private"
+  }
+}
+
+resource "aws_subnet" "Subnet4" {
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "172.16.3.0/24"
+  availability_zone       = "eu-west-1a"
+
+  tags = {
+    Name = "Subnet 4 - Private"
+  }
+}
+
+
 resource "aws_network_acl" "NetworkAclSubnet1" {
   vpc_id = aws_vpc.main.id
   subnet_ids = [aws_subnet.Subnet1.id]
@@ -55,7 +76,7 @@ resource "aws_network_acl" "NetworkAclSubnet1" {
   }
 
   tags = {
-    Name = "main"
+    Name = "NetworkAclSubnet1"
   }
 }
 
@@ -82,9 +103,65 @@ resource "aws_network_acl" "NetworkAclSubnet2" {
   }
 
   tags = {
-    Name = "main"
+    Name = "NetworkAclSubnet2"
   }
 }
+
+resource "aws_network_acl" "NetworkAclSubnet3" {
+  vpc_id = aws_vpc.main.id
+  subnet_ids = [aws_subnet.Subnet3.id]
+
+  egress {
+    protocol   = "-1"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
+
+  ingress {
+    protocol   = "-1"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
+
+  tags = {
+    Name = "NetworkAclSubnet3"
+  }
+}
+
+resource "aws_network_acl" "NetworkAclSubnet4" {
+  vpc_id = aws_vpc.main.id
+  subnet_ids = [aws_subnet.Subnet4.id]
+
+  egress {
+    protocol   = "-1"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
+
+  ingress {
+    protocol   = "-1"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
+
+  tags = {
+    Name = "NetworkAclSubnet4"
+  }
+}
+
+
 
 resource "aws_internet_gateway" "InternetGateway" {
   vpc_id = aws_vpc.main.id
@@ -98,6 +175,33 @@ resource "aws_route" "Route2InternetGateway" {
   destination_cidr_block = "0.0.0.0/0"
   gateway_id         = aws_internet_gateway.InternetGateway.id
 }
+
+
+/* Elastic IP for NAT */
+resource "aws_eip" "nat_eip" {
+  vpc        = true
+  depends_on = [aws_internet_gateway.InternetGateway]
+}
+
+/* NAT */
+resource "aws_nat_gateway" "nat" {
+  allocation_id = aws_eip.nat_eip.id
+  subnet_id     = aws_subnet.Subnet1.id
+  depends_on    = [aws_internet_gateway.InternetGateway]
+
+  tags = {
+    Name        = "aws-datalake-nat"
+  }
+}
+
+resource "aws_route" "Route2NatGateway" {
+  route_table_id         = aws_route_table.PrivateRouteTable.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id    = aws_nat_gateway.nat.id
+  depends_on    = [aws_nat_gateway.nat]
+
+}
+
 
 resource "aws_route_table" "PublicRouteTable" {
   vpc_id = aws_vpc.main.id
@@ -117,6 +221,24 @@ resource "aws_route_table_association" "PublicRouteTableSubnet2" {
   route_table_id = aws_route_table.PublicRouteTable.id
 }
 
+
+resource "aws_route_table" "PrivateRouteTable" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "Private Route Table"
+  }
+}
+
+resource "aws_route_table_association" "PrivateRouteTableSubnet3" {
+  subnet_id      = aws_subnet.Subnet3.id
+  route_table_id = aws_route_table.PrivateRouteTable.id
+}
+
+resource "aws_route_table_association" "PrivateRouteTableSubnet4" {
+  subnet_id      = aws_subnet.Subnet4.id
+  route_table_id = aws_route_table.PrivateRouteTable.id
+}
 
 
 # # Subnets
