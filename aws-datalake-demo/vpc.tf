@@ -162,7 +162,6 @@ resource "aws_network_acl" "NetworkAclSubnet4" {
 }
 
 
-
 resource "aws_internet_gateway" "InternetGateway" {
   vpc_id = aws_vpc.main.id
   tags = {
@@ -176,18 +175,17 @@ resource "aws_route" "Route2InternetGateway" {
   gateway_id         = aws_internet_gateway.InternetGateway.id
 }
 
-
 /* Elastic IP for NAT */
 resource "aws_eip" "nat_eip" {
   vpc        = true
-  depends_on = [aws_internet_gateway.InternetGateway]
 }
 
 /* NAT */
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat_eip.id
+  depends_on    = [aws_eip.nat_eip]
+
   subnet_id     = aws_subnet.Subnet1.id
-  depends_on    = [aws_internet_gateway.InternetGateway]
 
   tags = {
     Name        = "aws-datalake-nat"
@@ -195,11 +193,10 @@ resource "aws_nat_gateway" "nat" {
 }
 
 resource "aws_route" "Route2NatGateway" {
-  route_table_id         = aws_route_table.PrivateRouteTable.id
-  destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id    = aws_nat_gateway.nat.id
   depends_on    = [aws_nat_gateway.nat]
-
+  destination_cidr_block = "0.0.0.0/0"
+  route_table_id         = aws_route_table.PrivateRouteTable.id
+  nat_gateway_id    = aws_nat_gateway.nat.id
 }
 
 

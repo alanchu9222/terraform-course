@@ -3,7 +3,7 @@
 
 # Step 0 - SSH into EC2 instance
 
-ssh -i mykey ec2-user@ec2-user@54.247.38.181
+ssh -i test-key ec2-user@ec2-user@34.246.194.32
 
 # Step 1 - download and compile the tpch-kit dbgen tool
 
@@ -36,5 +36,5 @@ mv supplier.tbl supplier
 # Step 4 - Copy sample dataset to S3 bucket.  Replace placeholder with your own S3 bucket name.
 
 cd ~
-aws s3 cp tpch-data s3://dimeo-datalake-demo-3-s3bucket-1wnxurxog1ka1/tpch-data/ --recursive
+aws s3 cp tpch-data s3://dimeo-tf-test-bucket/tpch-data/ --recursive
 

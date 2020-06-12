@@ -53,6 +53,7 @@ resource "aws_instance" "DataGatewayInstance" {
   }  
 }
 
+
 resource "aws_instance" "DataGeneratorInstance" {
   ami           = "ami-0ea3405d2d2522162"
   instance_type = "t2.xlarge"
