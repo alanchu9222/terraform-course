@@ -62,7 +62,7 @@ Athena query setup
 ====*/
 resource "aws_athena_database" "query_result" {
   name   = "query_result"
-  bucket = aws_s3_bucket.output_bucket.id
+  bucket = aws_s3_bucket.output_bucket.bucket
 }
 
 /*====

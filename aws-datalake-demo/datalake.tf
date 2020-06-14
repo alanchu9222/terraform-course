@@ -5,7 +5,7 @@ resource "aws_glue_catalog_database" "AwsDataCatalog" {
 
 resource "aws_athena_database" "query_result" {
   name   = "query_result"
-  bucket = aws_s3_bucket.dimeo-tf-transformed-bucket.id
+  bucket = aws_s3_bucket.dimeo-tf-transformed-bucket.bucket
 }
 
 
