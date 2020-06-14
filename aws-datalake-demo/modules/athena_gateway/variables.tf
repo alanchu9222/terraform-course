@@ -42,3 +42,8 @@ variable "regionspecific_windows_server_ami" {
 variable "dmz_security_group_id" {
   description = "The security group for accessing the jump box"
 }
+
+variable "datagateway_security_group_id" {
+  description = "The security group for accessing the gateway box"
+}
+
