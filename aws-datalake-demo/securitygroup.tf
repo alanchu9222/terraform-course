@@ -53,46 +53,46 @@ resource "aws_security_group" "DataGatewaySecurityGroup" {
   }
 }
 
-resource "aws_security_group" "RedshiftSecurityGroup" {
-  vpc_id      = aws_vpc.main.id
-  name        = "RedshiftSecurityGroup"
-  description = "Security group for Redshift"
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+# resource "aws_security_group" "RedshiftSecurityGroup" {
+#   vpc_id      = aws_vpc.main.id
+#   name        = "RedshiftSecurityGroup"
+#   description = "Security group for Redshift"
+#   egress {
+#     from_port   = 0
+#     to_port     = 0
+#     protocol    = "-1"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
 
-  ingress {
-    from_port   = 5439
-    to_port     = 5439
-    protocol    = "tcp"
-    cidr_blocks = ["172.16.0.0/24"]
-  }
+#   ingress {
+#     from_port   = 5439
+#     to_port     = 5439
+#     protocol    = "tcp"
+#     cidr_blocks = ["172.16.0.0/24"]
+#   }
 
-  ingress {
-    from_port   = 5439
-    to_port     = 5439
-    protocol    = "tcp"
-    cidr_blocks = ["172.16.1.0/24"]
-  }
+#   ingress {
+#     from_port   = 5439
+#     to_port     = 5439
+#     protocol    = "tcp"
+#     cidr_blocks = ["172.16.1.0/24"]
+#   }
 
-  ingress {
-    from_port   = 5439
-    to_port     = 5439
-    protocol    = "tcp"
-    cidr_blocks = ["172.16.2.0/24"]
-  }
+#   ingress {
+#     from_port   = 5439
+#     to_port     = 5439
+#     protocol    = "tcp"
+#     cidr_blocks = ["172.16.2.0/24"]
+#   }
 
-  ingress {
-    from_port   = 5439
-    to_port     = 5439
-    protocol    = "tcp"
-    cidr_blocks = ["172.16.3.0/24"]
-  }
+#   ingress {
+#     from_port   = 5439
+#     to_port     = 5439
+#     protocol    = "tcp"
+#     cidr_blocks = ["172.16.3.0/24"]
+#   }
 
-  tags = {
-    Name = "RedshiftSecurityGroup"
-  }
-}
+#   tags = {
+#     Name = "RedshiftSecurityGroup"
+#   }
+# }

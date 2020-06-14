@@ -39,3 +39,5 @@ resource "aws_s3_bucket" "dimeo-tf-transformed-bucket" {
     Name        = "transformed bucket"
   }
 }
+
+
