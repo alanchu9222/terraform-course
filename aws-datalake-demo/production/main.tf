@@ -35,12 +35,12 @@ module "datalake_network" {
 }
 
 
-module "s3" {
-  source       = "../modules/s3"
-  project_name = var.project_name
-  environment  = "production"
-  bucket_name  = "dimeo-production-raw-data-bucket"
-}
+# module "s3" {
+#   source       = "../modules/s3"
+#   project_name = var.project_name
+#   environment  = "production"
+#   bucket_name  = "dimeo-production-raw-data-bucket"
+# }
 
 
 module "athena_gateway" {
@@ -51,18 +51,21 @@ module "athena_gateway" {
   public_subnet_id = module.datalake_network.datalake_public_subnet_id
   private_subnet_id = module.datalake_network.datalake_private_subnet_id
   athena_database = "dimeo-data"
-  query_results_bucket = "dimeo-demo-query-results-bucket"
-  data_source_bucket = "dimeo-demo-raw-data-bucket"
+  query_results_bucket = "dimeo-tf-query-results-bucket"
+  data_source_bucket = "dimeo-tf-raw-data-bucket"
   regionspecific_windows_server_ami = var.windows_server_ami
   dmz_security_group_id = module.datalake_network.default_sg_id
   datagateway_security_group_id = module.datalake_network.datagateway_sg_id
 }
 
+
+
+
 # /*====
 # Defines a role that allows the user to access the Data Gateway and Jump Box EC2
 # ====*/
-resource "aws_iam_role" "EC2AccessRole" {
-  name = "EC2AccessRole"
+resource "aws_iam_role" "DimeoEC2AccessRole" {
+  name = "DimeoEC2AccessRole"
   path = "/"
 
   assume_role_policy = <<EOF
@@ -113,7 +116,7 @@ data "aws_iam_policy_document" "DataLakeAccessPolicy" {
 }
 
 resource "aws_iam_role_policy_attachment" "EC2AccessRole-policy-attach" {
-  role       = aws_iam_role.EC2AccessRole.name
+  role       = aws_iam_role.DimeoEC2AccessRole.name
   policy_arn = aws_iam_policy.DataLakeAccessPolicy.arn
 }
 

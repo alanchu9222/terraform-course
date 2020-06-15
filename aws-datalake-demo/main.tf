@@ -241,7 +241,4 @@ resource "aws_iam_role_policy_attachment" "EC2AccessRole-policy-attach" {
   policy_arn = aws_iam_policy.DataLakeAccessPolicy.arn
 }
 
-resource "aws_iam_role_policy_attachment" "glue_service" {
-    role = aws_iam_role.glue.name
-    policy_arn = "arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole"
-}
+
